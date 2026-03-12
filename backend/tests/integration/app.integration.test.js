@@ -41,6 +41,16 @@ test('POST /api/bottles/toss should require auth token', async () => {
   assert.equal(res.body.success, false);
 });
 
+
+test('POST /api/auth/login should include risk headers', async () => {
+  const res = await request(app)
+    .post('/api/auth/login')
+    .send({ username: '', password: '123456' });
+
+  assert.equal(res.statusCode, 400);
+  assert.equal(Boolean(res.headers['x-risk-score']), true);
+});
+
 test('GET /api/bottles/nearby should validate coordinates', async () => {
   const res = await request(app)
     .get('/api/bottles/nearby')
@@ -60,4 +70,12 @@ test('GET /api/bottles/:id/pickup should reject invalid id', async () => {
 
   assert.equal(res.statusCode, 403);
   assert.equal(res.body.success, false);
+});
+
+
+test('GET /risk/events should return replayable risk events', async () => {
+  const res = await request(app).get('/risk/events').query({ limit: 5 });
+
+  assert.equal(res.statusCode, 200);
+  assert.equal(Array.isArray(res.body.data), true);
 });

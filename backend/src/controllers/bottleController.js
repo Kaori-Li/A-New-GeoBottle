@@ -92,6 +92,7 @@ exports.tossBottle = async (req, res, next) => {
 
     return res.status(201).json({
       success: true,
+      risk: req.riskAssessment || null,
       data: {
         id: savedBottle._id,
         location: savedBottle.location,
@@ -136,7 +137,12 @@ exports.getNearbyBottles = async (req, res, next) => {
       };
     });
 
-    return res.status(200).json({ success: true, count: data.length, data });
+    return res.status(200).json({
+      success: true,
+      count: data.length,
+      risk: req.riskAssessment || null,
+      data,
+    });
   } catch (error) {
     logger.error('BOTTLE_NEARBY_FAILED', { message: error.message, userId: req.user?.id });
     return next(createHttpError(500, '搜索失败'));
@@ -197,6 +203,7 @@ exports.pickupBottle = async (req, res, next) => {
 
     return res.status(200).json({
       success: true,
+      risk: req.riskAssessment || null,
       data: {
         id: bottle._id,
         content: decodeContent(bottle.content),

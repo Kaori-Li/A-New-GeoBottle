@@ -8,6 +8,7 @@ const app = express(); // 初始化应用实例
 const authRoutes = require('./routes/authRoutes');
 const bottleRoutes = require('./routes/bottleRoutes');
 const errorHandler = require('./utils/errorHandler');
+const strategyRiskService = require('./services/strategyRiskService');
 
 app.use(express.json());
 

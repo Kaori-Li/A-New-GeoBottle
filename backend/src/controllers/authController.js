@@ -126,7 +126,11 @@ exports.login = async (req, res, next) => {
     const role = user.username.startsWith('guest_') ? 'guest' : 'user';
     const token = signToken(user._id, role, user.tokenVersion || 0);
 
-    return res.status(200).json({ success: true, token });
+    return res.status(200).json({
+      success: true,
+      token,
+      risk: req.riskAssessment || null,
+    });
   } catch (error) {
     logger.error('AUTH_LOGIN_FAILED', { message: error.message });
     return next(createHttpError(500, '服务器错误'));
