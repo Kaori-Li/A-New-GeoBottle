@@ -38,7 +38,17 @@ const pushRiskEvent = (event) => {
   }
 };
 
-const getSubjectKey = ({ userId, deviceFingerprint, ip }) => userId || `fp:${deviceFingerprint}` || `ip:${ip}`;
+const getSubjectKey = ({ userId, deviceFingerprint, ip }) => {
+  if (userId) {
+    return `user:${userId}`;
+  }
+
+  if (deviceFingerprint && deviceFingerprint !== 'unknown') {
+    return `fp:${deviceFingerprint}`;
+  }
+
+  return `ip:${ip || 'unknown'}`;
+};
 
 const getActionStats = (subjectKey, now) => {
   const current = actionEventsBySubject.get(subjectKey) || [];

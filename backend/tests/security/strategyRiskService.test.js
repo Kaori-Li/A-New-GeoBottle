@@ -41,3 +41,32 @@ test('strategy risk replay should return latest evaluation events', () => {
   assert.equal(events.length > 0, true);
   assert.equal(typeof events[0].eventId, 'string');
 });
+
+
+test('strategy risk should isolate subjects by ip when no user and no explicit fingerprint', () => {
+  const reqA = createReq({
+    ip: '10.0.0.1',
+    user: null,
+    headers: {
+      'user-agent': 'risk-test',
+      'accept-language': 'zh-CN',
+    },
+  });
+
+  const reqB = createReq({
+    ip: '10.0.0.2',
+    user: null,
+    headers: {
+      'user-agent': 'risk-test',
+      'accept-language': 'en-US',
+    },
+  });
+
+  for (let i = 0; i < 6; i += 1) {
+    strategyRiskService.recordAction({ req: reqA, action: 'toss' });
+  }
+
+  const resultB = strategyRiskService.evaluateRequestRisk({ req: reqB, action: 'toss' });
+
+  assert.equal(resultB.hitRules.some((item) => item.code === 'HIGH_FREQ_TOSS_1M'), false);
+});
