@@ -14,10 +14,10 @@ GeoBottle 是一个**基于地理位置的异步社交应用**：用户可以在
 - 移动端基础页面：登录、地图主页、投掷页、个人页（含真实地图点位渲染）。
 
 ### 当前已知短板（基于现状梳理）
-- **可观测性较弱**：尚无结构化日志、指标采集、告警与审计方案。
-- **风控能力待补齐**：缺少限流、防刷、设备指纹等防滥用能力。
-- **移动端测试覆盖仍偏薄**：已具备 smoke + service 单测，但尚未覆盖 hooks 与端到端场景。
-- **后端测试仍需继续扩展**：已补充集成/数据库验证，但性能压测与异常注入测试尚未建立。
+- **可观测性链路待生产化**：已具备结构化日志、`/metrics` 与 Prometheus 导出，但告警编排、审计落盘与 SLO 仪表盘仍待补齐。
+- **风控能力待进阶**：已具备限流与登录失败临时封禁，下一步建议补充设备指纹、IP 信誉与行为评分。
+- **移动端自动化覆盖仍需扩展**：已补充 smoke + service + hooks + e2e（业务流程级）测试，仍建议在真机/模拟器补端到端回归。
+- **后端韧性测试仍需深化**：已引入性能基准测试与异常注入测试，下一步可补数据库故障演练与网络抖动场景。
 
 ---
 
@@ -108,6 +108,25 @@ docker compose up --build
 
 ---
 
+
+## 生产可观测性闭环（Baseline）
+
+已补齐可直接落地的可观测性资产：
+
+- **告警规则**（Prometheus）：`observability/prometheus/alert-rules.yml`
+  - 5xx 比例告警
+  - p95 延迟告警
+  - 登录失败率告警
+- **SLO 仪表盘定义**（Grafana）：`observability/grafana/slo-dashboard.json`
+- **SLO 目标说明**：`observability/slo/slo-targets.md`
+- **审计日志归档字段**（后端）：
+  - 登录失败：`AUTH_LOGIN_FAILED`
+  - 全会话登出：`AUTH_LOGOUT_ALL`
+  - 拾取瓶子：`BOTTLE_PICKUP`
+  - 字段包含 `who / when / where / result`
+
+---
+
 ## 常见问题
 
 - Android 模拟器访问宿主机后端请使用 `10.0.2.2`。
@@ -119,8 +138,8 @@ docker compose up --build
 
 ## 建议的下一步（Roadmap）
 
-- [ ] 扩展移动端自动化测试（补齐 hooks 与核心交互流程）。
+- [x] 扩展移动端自动化测试（已补齐 hooks + e2e 业务流程级场景）。
 - [x] 引入服务端内容加密存储（AES-GCM，兼容旧版 Base64 数据）。
-- [ ] 增加限流、防刷与风控能力。
-- [ ] 建立日志、指标、告警与审计链路。
-- [x] 补全基础 CI（backend test + mobile smoke/unit test）。
+- [x] 增加限流、防刷与基础风控能力（限流 + 登录失败临时封禁）。
+- [x] 建立日志、指标、告警与审计链路（已补齐基础告警规则、SLO 仪表盘与关键审计事件）。
+- [x] 补全基础 CI（backend test + perf + mobile smoke/unit/e2e test）。
