@@ -14,6 +14,15 @@ test('GET /health should return running status', async () => {
   assert.equal(res.body.message, 'GeoBottle API is running');
 });
 
+
+test('GET /metrics/prometheus should return prometheus format', async () => {
+  const res = await request(app).get('/metrics/prometheus');
+
+  assert.equal(res.statusCode, 200);
+  assert.equal(res.text.includes('geobottle_http_requests_total'), true);
+  assert.equal(String(res.headers['content-type']).includes('text/plain'), true);
+});
+
 test('POST /api/auth/register should reject invalid payload', async () => {
   const res = await request(app)
     .post('/api/auth/register')

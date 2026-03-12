@@ -96,6 +96,13 @@ exports.login = async (req, res, next) => {
     const riskKey = resolveRiskKey(req, normalizedUsername);
     const riskStatus = riskControlService.assertLoginAllowed(riskKey);
     if (!riskStatus.allowed) {
+      recordLoginFailureMetric('blocked');
+      recordAuditEvent(req, {
+        action: 'AUTH_LOGIN_FAILED',
+        result: 'blocked',
+        target: { username: normalizedUsername },
+        details: { retryAfterSeconds: riskStatus.retryAfterSeconds },
+      });
       return next(createHttpError(429, '登录尝试过于频繁，请稍后再试', {
         retryAfterSeconds: riskStatus.retryAfterSeconds,
       }));
@@ -105,6 +112,12 @@ exports.login = async (req, res, next) => {
 
     if (!user || !(await user.comparePassword(password, user.password))) {
       riskControlService.recordLoginFailure(riskKey);
+      recordLoginFailureMetric('invalid_credentials');
+      recordAuditEvent(req, {
+        action: 'AUTH_LOGIN_FAILED',
+        result: 'denied',
+        target: { username: normalizedUsername },
+      });
       return next(createHttpError(401, '用户名或密码错误'));
     }
 

@@ -108,6 +108,25 @@ docker compose up --build
 
 ---
 
+
+## 生产可观测性闭环（Baseline）
+
+已补齐可直接落地的可观测性资产：
+
+- **告警规则**（Prometheus）：`observability/prometheus/alert-rules.yml`
+  - 5xx 比例告警
+  - p95 延迟告警
+  - 登录失败率告警
+- **SLO 仪表盘定义**（Grafana）：`observability/grafana/slo-dashboard.json`
+- **SLO 目标说明**：`observability/slo/slo-targets.md`
+- **审计日志归档字段**（后端）：
+  - 登录失败：`AUTH_LOGIN_FAILED`
+  - 全会话登出：`AUTH_LOGOUT_ALL`
+  - 拾取瓶子：`BOTTLE_PICKUP`
+  - 字段包含 `who / when / where / result`
+
+---
+
 ## 常见问题
 
 - Android 模拟器访问宿主机后端请使用 `10.0.2.2`。
