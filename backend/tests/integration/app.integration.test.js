@@ -49,6 +49,6 @@ test('GET /api/bottles/:id/pickup should reject invalid id', async () => {
     .set('Authorization', `Bearer ${token}`)
     .query({ lng: 120, lat: 30 });
 
-  assert.equal(res.statusCode, 400);
+  assert.equal(res.statusCode, 403);
   assert.equal(res.body.success, false);
 });

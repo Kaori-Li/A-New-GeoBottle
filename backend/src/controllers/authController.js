@@ -4,6 +4,8 @@ const jwt = require('jsonwebtoken'); // 引入 JWT，用于签发令牌。
 const { getJwtSecret } = require('../utils/jwtConfig'); // 引入统一 JWT 配置解析。
 const createHttpError = require('../utils/httpError');
 const logger = require('../utils/logger');
+const riskControlService = require('../services/riskControlService');
+const tokenDenylistService = require('../services/tokenDenylistService');
 
 // 统一定义最小密码长度，避免弱密码。
 const MIN_PASSWORD_LENGTH = 6;
@@ -143,5 +145,46 @@ exports.guestLogin = async (req, res, next) => {
   } catch (error) {
     logger.error('AUTH_GUEST_LOGIN_FAILED', { message: error.message });
     return next(createHttpError(500, '游客登录失败，请稍后重试'));
+  }
+};
+
+/**
+ * 登出当前会话：把当前 JWT 的 jti 加入 denylist。
+ */
+exports.logout = async (req, res, next) => {
+  try {
+    const authHeader = req.headers.authorization || '';
+    const token = authHeader.startsWith('Bearer ') ? authHeader.slice(7) : null;
+
+    if (token) {
+      const decoded = jwt.decode(token) || {};
+      const expiresAt = Number(decoded.exp || 0);
+      const ttlSeconds = expiresAt > 0 ? Math.max(0, expiresAt - Math.floor(Date.now() / 1000)) : 7 * 24 * 3600;
+
+      tokenDenylistService.denyToken(req.user?.jti, ttlSeconds);
+    }
+
+    return res.status(200).json({ success: true, message: '已退出当前会话' });
+  } catch (error) {
+    logger.error('AUTH_LOGOUT_FAILED', { message: error.message });
+    return next(createHttpError(500, '退出登录失败，请稍后重试'));
+  }
+};
+
+/**
+ * 登出全部会话：递增 tokenVersion，使历史令牌全部失效。
+ */
+exports.logoutAll = async (req, res, next) => {
+  try {
+    if (!req.user?.id) {
+      return next(createHttpError(401, '未登录或用户信息缺失'));
+    }
+
+    await User.findByIdAndUpdate(req.user.id, { $inc: { tokenVersion: 1 } });
+
+    return res.status(200).json({ success: true, message: '已退出全部会话' });
+  } catch (error) {
+    logger.error('AUTH_LOGOUT_ALL_FAILED', { message: error.message });
+    return next(createHttpError(500, '退出全部会话失败，请稍后重试'));
   }
 };
