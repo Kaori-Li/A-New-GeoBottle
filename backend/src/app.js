@@ -66,12 +66,6 @@ app.get('/metrics/prometheus', (req, res) => {
   res.status(200).send(getPrometheusMetricsText());
 });
 
-
-app.get('/risk/events', (req, res) => {
-  const data = strategyRiskService.getRecentRiskEvents(req.query?.limit);
-  res.status(200).json({ success: true, count: data.length, data });
-});
-
 // 【关键步骤】在所有路由加载之后加载错误处理器
 // 这样在路由中通过 next(err) 触发的错误都能被此中间件捕获
 app.use(errorHandler);

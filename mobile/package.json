@@ -10,8 +10,7 @@
     "test": "npm run test:smoke && npm run test:unit && npm run test:e2e",
     "test:smoke": "node scripts/smoke-check.js",
     "test:unit": "jest --runInBand --testPathIgnorePatterns=\\.e2e\\.test\\.js$",
-    "test:e2e": "jest --runInBand --testMatch \"**/__tests__/**/*.e2e.test.js\"",
-    "test:e2e:maestro": "maestro test e2e/maestro/login-and-permission-flow.yaml"
+    "test:e2e": "jest --runInBand --testMatch \"**/__tests__/**/*.e2e.test.js\""
   },
   "keywords": [
     "react-native",

@@ -8,9 +8,7 @@
     "test": "node --test tests/controllers/*.test.js tests/utils/*.test.js tests/integration/*.test.js tests/models/*.test.js tests/security/*.test.js tests/chaos/*.test.js",
     "test:perf": "node --test tests/perf/*.test.js",
     "test:chaos": "node --test tests/chaos/*.test.js",
-    "test:perf:smoke": "node tests/perf/load.smoke.js",
-    "test:perf:api": "node --test tests/perf/api.perf.test.js",
-    "perf:baseline:api": "node tests/perf/generateApiBaselineReport.js"
+    "test:perf:smoke": "node tests/perf/load.smoke.js"
   },
   "keywords": [],
   "author": "",

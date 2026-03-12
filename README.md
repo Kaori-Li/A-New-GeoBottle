@@ -15,7 +15,7 @@ GeoBottle 是一个**基于地理位置的异步社交应用**：用户可以在
 
 ### 当前已知短板（基于现状梳理）
 - **可观测性链路待生产化**：已具备结构化日志、`/metrics` 与 Prometheus 导出，但告警编排、审计落盘与 SLO 仪表盘仍待补齐。
-- **风控能力持续演进**：已具备限流、登录失败封禁与评分式策略风控（设备指纹 + IP/ASN 画像 + 行为评分），下一步可补充外部威胁情报联动。
+- **风控能力待进阶**：已具备限流与登录失败临时封禁，下一步建议补充设备指纹、IP 信誉与行为评分。
 - **移动端自动化覆盖仍需扩展**：已补充 smoke + service + hooks + e2e（业务流程级）测试，仍建议在真机/模拟器补端到端回归。
 - **后端韧性测试仍需深化**：已引入性能基准测试与异常注入测试，下一步可补数据库故障演练与网络抖动场景。
 
@@ -109,37 +109,6 @@ docker compose up --build
 ---
 
 
-
-
-## 真实端到端与依赖故障演练
-
-本仓库已新增「更真实」的测试能力：
-
-- **移动端（模拟器/真机级 E2E）**：`mobile/e2e/maestro/`
-  - 覆盖真实 UI 启动、登录页可见性、游客入口、定位权限弹窗处理。
-  - 运行命令：`npm run test:e2e:maestro`（需本地安装 Maestro CLI 与设备）。
-
-- **后端（依赖级故障注入）**：`backend/tests/chaos/dependencyFaultInjection.test.js`
-  - 覆盖 JWT 配置缺失、Mongo 连接中断/超时等依赖故障路径。
-
-- **接口级性能基线**：
-  - 门槛测试：`backend/tests/perf/api.perf.test.js`
-  - 基线报告生成：`backend/tests/perf/generateApiBaselineReport.js`
-  - 输出文件：`observability/perf/api-baseline.json`
-
----
-
-## 评分式风控（策略层）
-
-后端新增了策略化风险评估（在基础限流之外）：
-
-- **设备指纹追踪**：优先读取 `x-device-fingerprint`，缺失时会基于 IP/UA 派生指纹，支持匿名会话追踪。
-- **IP/ASN 风险画像**：支持 `x-asn`、`x-geo-country` 与代理链特征（`x-forwarded-for`）评分。
-- **行为评分**：基于 1 分钟窗口内 `login/toss/nearby/pickup` 频次与组合规则计分。
-- **可观测与可回放**：每次请求输出 `riskScore + hitRules`，响应头包含 `X-Risk-Score` 与 `X-Risk-Event-Id`，并支持 `/risk/events` 回放最近风控事件。
-
----
-
 ## 生产可观测性闭环（Baseline）
 
 已补齐可直接落地的可观测性资产：
@@ -172,5 +141,5 @@ docker compose up --build
 - [x] 扩展移动端自动化测试（已补齐 hooks + e2e 业务流程级场景）。
 - [x] 引入服务端内容加密存储（AES-GCM，兼容旧版 Base64 数据）。
 - [x] 增加限流、防刷与基础风控能力（限流 + 登录失败临时封禁）。
-- [x] 建立日志、指标、告警与审计链路（已补齐基础告警规则、SLO 仪表盘与关键审计事件）。
+- [ ] 建立日志、指标、告警与审计链路（日志与指标已上线，告警/审计待完善）。
 - [x] 补全基础 CI（backend test + perf + mobile smoke/unit/e2e test）。

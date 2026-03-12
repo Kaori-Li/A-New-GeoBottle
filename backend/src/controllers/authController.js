@@ -6,8 +6,6 @@ const createHttpError = require('../utils/httpError');
 const logger = require('../utils/logger');
 const riskControlService = require('../services/riskControlService');
 const tokenDenylistService = require('../services/tokenDenylistService');
-const { recordAuditEvent } = require('../utils/auditLogger');
-const { recordLoginFailureMetric } = require('../utils/promMetrics');
 
 // 统一定义最小密码长度，避免弱密码。
 const MIN_PASSWORD_LENGTH = 6;
@@ -200,12 +198,6 @@ exports.logoutAll = async (req, res, next) => {
     }
 
     await User.findByIdAndUpdate(req.user.id, { $inc: { tokenVersion: 1 } });
-
-    recordAuditEvent(req, {
-      action: 'AUTH_LOGOUT_ALL',
-      result: 'success',
-      target: { userId: req.user.id },
-    });
 
     return res.status(200).json({ success: true, message: '已退出全部会话' });
   } catch (error) {
