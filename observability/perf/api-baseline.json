@@ -1,0 +1,16 @@
+{
+  "generatedAt": "2026-03-12T08:30:32.045Z",
+  "sampleSize": 100,
+  "routes": {
+    "/health": {
+      "p50Ms": 2.82,
+      "p95Ms": 17.36,
+      "p99Ms": 72.86
+    },
+    "/api/bottles/nearby (validation path)": {
+      "p50Ms": 5.69,
+      "p95Ms": 26.99,
+      "p99Ms": 104.82
+    }
+  }
+}
