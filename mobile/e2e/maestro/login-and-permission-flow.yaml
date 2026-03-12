@@ -1,0 +1,23 @@
+# Maestro E2E: 启动应用 -> 登录页可见 -> 触发游客模式 -> 允许定位权限（如出现）
+appId: com.geobottle
+---
+- launchApp
+- assertVisible: "GeoBottle"
+- assertVisible: "登录"
+
+# 如果页面有“游客模式”按钮可点击（文案按真实 UI 调整）
+- runFlow:
+    when:
+      visible: "游客"
+    commands:
+      - tapOn: "游客"
+
+# Android 权限弹窗（如果出现则处理）
+- runFlow:
+    when:
+      visible: "允许"
+    commands:
+      - tapOn: "允许"
+
+# 进入主界面后应看到地图相关文案
+- assertVisible: "地图"
