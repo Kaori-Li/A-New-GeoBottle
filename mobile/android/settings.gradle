@@ -1,0 +1,25 @@
+// Android Settings：声明根工程名与包含模块。
+
+// 配置 React Native Gradle 插件管理。
+pluginManagement {
+    // 声明插件仓库。
+    repositories {
+        // Google 插件仓库。
+        google()
+        // Maven Central 插件仓库。
+        mavenCentral()
+        // Gradle 插件门户。
+        gradlePluginPortal()
+    }
+}
+
+// 应用 React Native 的 settings 插件。
+plugins {
+    id('com.facebook.react.settings')
+}
+
+// 设置根工程名称。
+rootProject.name = 'GeoBottle'
+
+// 包含 app 模块。
+include(':app')

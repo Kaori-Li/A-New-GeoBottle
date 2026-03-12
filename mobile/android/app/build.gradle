@@ -1,0 +1,55 @@
+// App 模块 Gradle 配置：定义 Android 打包参数与 React Native 集成。
+
+plugins {
+    // 应用 Android Application 插件。
+    id 'com.android.application'
+    // 应用 React Native Gradle 插件。
+    id 'com.facebook.react'
+}
+
+android {
+    // 声明应用命名空间。
+    namespace 'com.geobottle'
+
+    // 声明编译 SDK 版本。
+    compileSdkVersion rootProject.ext.compileSdkVersion
+
+    defaultConfig {
+        // 声明应用 ID。
+        applicationId 'com.geobottle'
+        // 声明最小 SDK。
+        minSdkVersion rootProject.ext.minSdkVersion
+        // 声明目标 SDK。
+        targetSdkVersion rootProject.ext.targetSdkVersion
+        // 声明版本号。
+        versionCode 1
+        // 声明版本名称。
+        versionName '1.0.0'
+    }
+
+    buildTypes {
+        release {
+            // MVP 阶段先使用调试签名，便于快速验证。
+            signingConfig signingConfigs.debug
+            // MVP 阶段先关闭代码混淆，降低调试成本。
+            minifyEnabled false
+        }
+    }
+}
+
+react {
+    // 自动链接原生依赖，降低手工维护成本。
+    autolinkLibrariesWithApp()
+}
+
+dependencies {
+    // 引入 React Native Android 运行时。
+    implementation('com.facebook.react:react-android')
+
+    // 根据开关选择 Hermes 或 JSC。
+    if (project.hasProperty('hermesEnabled') && project.hermesEnabled.toBoolean()) {
+        implementation('com.facebook.react:hermes-android')
+    } else {
+        implementation('org.webkit:android-jsc:+')
+    }
+}

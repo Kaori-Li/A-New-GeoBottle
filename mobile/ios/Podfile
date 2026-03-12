@@ -1,0 +1,19 @@
+# iOS CocoaPods 配置：用于安装 React Native 与三方原生依赖。
+
+platform :ios, '13.0' # 声明最低 iOS 版本。
+
+require_relative '../node_modules/react-native/scripts/react_native_pods' # 引入 RN Pod 脚本。
+require_relative '../node_modules/@react-native-community/cli-platform-ios/native_modules' # 引入自动链接脚本。
+
+target 'AppName' do # 声明 iOS 目标名称（需与 Xcode 工程一致）。
+  config = use_native_modules! # 自动收集原生模块配置。
+
+  use_react_native!(
+    :path => config[:reactNativePath], # 指定 RN 路径。
+    :hermes_enabled => true # 开启 Hermes 以提升运行性能。
+  )
+
+  post_install do |installer| # 安装后回调。
+    react_native_post_install(installer) # 执行 RN 官方 post-install 修复。
+  end
+end

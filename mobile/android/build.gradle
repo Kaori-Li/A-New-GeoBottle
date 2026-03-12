@@ -1,0 +1,41 @@
+// 顶层 Android Gradle 配置文件：用于声明全局构建仓库与插件版本。
+
+buildscript {
+    // 声明全局构建参数。
+    ext {
+        // 指定 Android SDK 编译版本。
+        compileSdkVersion = 34
+        // 指定最小支持版本。
+        minSdkVersion = 24
+        // 指定目标适配版本。
+        targetSdkVersion = 34
+        // 指定 Kotlin 版本（预留给未来扩展）。
+        kotlinVersion = '1.9.24'
+    }
+
+    // 声明构建脚本依赖下载源。
+    repositories {
+        // Google Maven 源。
+        google()
+        // Maven Central 源。
+        mavenCentral()
+    }
+
+    // 声明构建脚本插件依赖。
+    dependencies {
+        // Android Gradle 插件。
+        classpath('com.android.tools.build:gradle:8.5.2')
+        // React Native Gradle 插件。
+        classpath('com.facebook.react:react-native-gradle-plugin')
+    }
+}
+
+// 声明所有子模块的依赖源。
+allprojects {
+    repositories {
+        // Google Maven 源。
+        google()
+        // Maven Central 源。
+        mavenCentral()
+    }
+}

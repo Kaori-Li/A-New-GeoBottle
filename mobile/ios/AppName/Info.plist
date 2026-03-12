@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<!-- 应用显示名称 -->
+	<key>CFBundleDisplayName</key>
+	<string>GeoBottle</string>
+
+	<!-- 应用可执行名 -->
+	<key>CFBundleName</key>
+	<string>GeoBottle</string>
+
+	<!-- 应用唯一标识（示例值，可按团队规范替换） -->
+	<key>CFBundleIdentifier</key>
+	<string>com.geobottle.app</string>
+
+	<!-- 应用版本号 -->
+	<key>CFBundleShortVersionString</key>
+	<string>1.0.0</string>
+
+	<!-- 构建版本号 -->
+	<key>CFBundleVersion</key>
+	<string>1</string>
+
+	<!-- iOS 最低支持版本 -->
+	<key>MinimumOSVersion</key>
+	<string>13.0</string>
+
+	<!-- 定位权限文案：应用使用中 -->
+	<key>NSLocationWhenInUseUsageDescription</key>
+	<string>GeoBottle 需要定位权限来展示附近漂流瓶并判断捞取距离。</string>
+
+	<!-- 定位权限文案：后台场景（预留） -->
+	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
+	<string>GeoBottle 在特定场景需要持续定位，以提供更平滑的附近瓶子体验。</string>
+
+	<!-- 允许任意网络加载（开发环境可连本地 HTTP） -->
+	<key>NSAppTransportSecurity</key>
+	<dict>
+		<key>NSAllowsArbitraryLoads</key>
+		<true/>
+	</dict>
+
+	<!-- 支持横竖屏方向（可根据设计进一步收敛） -->
+	<key>UISupportedInterfaceOrientations</key>
+	<array>
+		<string>UIInterfaceOrientationPortrait</string>
+		<string>UIInterfaceOrientationLandscapeLeft</string>
+		<string>UIInterfaceOrientationLandscapeRight</string>
+	</array>
+</dict>
+</plist>
